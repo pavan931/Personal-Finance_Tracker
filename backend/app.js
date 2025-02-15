@@ -3,6 +3,7 @@ const router = require('./routes/userRouter');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv')
 const app = express();
+const errorHandler = require('./middlewares/errorHandlerMiddleware')
 
 dotenv.config();
 const PORT = process.env.PORT || 8000;
@@ -21,6 +22,9 @@ app.use(express.json()) //Pass incoming json data
 // ! Routes
 
 app.use('/',router)
+
+// ! Error
+app.use(errorHandler)
 
 app.listen(PORT,()=>{
     console.log(`Server Started and Running at. ${PORT}`);
