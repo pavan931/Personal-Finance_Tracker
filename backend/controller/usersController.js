@@ -75,14 +75,56 @@ const usersController = {
     //! Profile
 
     profile: asyncHandler(async(req,res)=>{
-        const user = await User.findById("67a34039c9721fce986955c5")
+        // console.log(req.user)
+        const user = await User.findById(req.user)
 
         if(!user){
             throw new Error("User not found")
         }
         //! Send the response
         res.json({username:user.username, email : user.email})
-    })
+    }),
+
+    // !Change Password
+
+    changeUserPassword: asyncHandler(async(req,res)=>{
+        const {newPassword} = req.body;
+        // !Find the User
+        const user = await User.findById(req.user)
+
+        if(!user){
+            throw new Error("User not found")
+        }
+        // !Hash the password before saving
+         // ! Hash the password
+         const salt  = await bcrypt.genSalt(10)
+         const hashedPassword = await bcrypt.hash(newPassword,salt)
+        user.password = hashedPassword
+
+        // !Resave
+        await user.save()
+
+        //! Send the response
+        res.json({message:"Password Changed Successfully"})
+    }),
+
+    // !update user profile
+
+    updateUserProfile: asyncHandler(async(req,res)=>{
+        const {email,username} = req.body;
+        
+        const updatedUser = await User.findByIdAndUpdate(req.user,
+            {
+            username,email,
+        },{
+            new:true,
+        })
+
+       
+
+        //! Send the response
+        res.json({message:"User profile Updated Successfully",updatedUser})
+    }),
 }
 
 module.exports = usersController;

@@ -11,7 +11,24 @@ router.post('/api/v1/users/register',usersController.register)
 router.post('/api/v1/users/login',usersController.login)
 
 // !Profile
-router.get('/api/v1/users/profile',isAuthenticated,usersController.profile)
+router.get(
+    '/api/v1/users/profile',
+    isAuthenticated,
+    usersController.profile
+);
 
+// ! Change Password
+router.put(
+    '/api/v1/users/change-password',
+    isAuthenticated,
+    usersController.changeUserPassword
+);
+
+// !update Profile
+router.put(
+    '/api/v1/users/update-profile',
+    isAuthenticated,
+    usersController.updateUserProfile
+);
 
 module.exports = router;
